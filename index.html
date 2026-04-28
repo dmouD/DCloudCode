@@ -1,11 +1,14 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
+  <!-- head 区域：放网页标题、编码、移动端适配、SEO 描述和 CSS 样式 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="一个低成本运行的静态技术博客网站，支持 Markdown 写作、搜索、标签、导入导出。" />
   <title>DCloudCode 技术博客</title>
   <style>
+    /* 样式区：控制网站的颜色、布局、卡片、文章正文、编辑器和移动端适配 */
+    /* 全局主题变量：集中管理浅色模式下的颜色、圆角、阴影 */
     :root {
       --bg: #f7f8fb;
       --panel: #ffffff;
@@ -21,6 +24,7 @@
       --radius: 22px;
     }
 
+    /* 深色主题变量：点击“主题”按钮后会切换到这里的配色 */
     [data-theme="dark"] {
       --bg: #0b1020;
       --panel: #111827;
@@ -37,6 +41,7 @@
 
     * { box-sizing: border-box; }
 
+    /* 页面主体：设置全站字体、背景渐变、文字颜色和最小高度 */
     body {
       margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -51,11 +56,13 @@
 
     a { color: inherit; text-decoration: none; }
 
+    /* 页面容器：限制内容最大宽度，并让内容居中 */
     .container {
       width: min(1160px, calc(100% - 32px));
       margin: 0 auto;
     }
 
+    /* 顶部导航栏：固定在页面顶部，带半透明模糊效果 */
     .nav {
       position: sticky;
       top: 0;
@@ -82,6 +89,7 @@
       font-size: 1.15rem;
     }
 
+    /* 左上角 D Logo：控制图标大小、渐变背景和圆角 */
     .logo-mark {
       width: 38px;
       height: 38px;
@@ -140,6 +148,7 @@
       color: #fca5a5;
     }
 
+    /* 首页首屏区域：左侧介绍网站，右侧显示统计信息 */
     .hero {
       padding: 72px 0 36px;
       display: grid;
@@ -225,6 +234,7 @@
       margin-top: 6px;
     }
 
+    /* 搜索工具栏：包含搜索框和清空本地编辑按钮 */
     .toolbar {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -253,6 +263,7 @@
       padding: 14px 0;
     }
 
+    /* 标签筛选区：根据文章 tags 生成筛选按钮 */
     .tags {
       display: flex;
       gap: 10px;
@@ -276,6 +287,7 @@
       border-color: var(--brand);
     }
 
+    /* 卡片网格：文章卡片和下载资源卡片都用这个布局 */
     .posts {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -333,6 +345,7 @@
       font-size: 0.82rem;
     }
 
+    /* 文章详情页容器：点击文章卡片后进入这个页面 */
     .article {
       padding: clamp(22px, 4vw, 52px);
       margin: 36px auto 64px;
@@ -344,6 +357,7 @@
       margin-bottom: 12px;
     }
 
+    /* Markdown 正文区域：控制文章内容的排版 */
     .article-body {
       margin-top: 34px;
       font-size: 1.04rem;
@@ -411,6 +425,7 @@
       border: 1px dashed var(--border);
     }
 
+    /* 写文章弹窗：点击“写文章”后显示 */
     dialog {
       border: 0;
       padding: 0;
@@ -440,6 +455,7 @@
       margin-bottom: 18px;
     }
 
+    /* 编辑器布局：左边写 Markdown，右边实时预览 */
     .editor-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -491,11 +507,13 @@
       color: var(--muted);
     }
 
+    /* 平板适配：屏幕变窄后改成单列布局 */
     @media (max-width: 920px) {
       .hero, .toolbar, .editor-grid { grid-template-columns: 1fr; }
       .posts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
+    /* 手机适配：导航和卡片全部变成纵向排列 */
     @media (max-width: 640px) {
       .nav-inner { align-items: flex-start; flex-direction: column; padding: 14px 0; }
       .nav-actions { justify-content: flex-start; }
@@ -507,6 +525,8 @@
   </style>
 </head>
 <body>
+  <!-- body 区域：浏览器真正显示出来的页面内容 -->
+  <!-- 顶部导航栏：包含 Logo、主题切换、导入导出、写文章按钮 -->
   <nav class="nav">
     <div class="container nav-inner">
       <a class="logo" href="#home" aria-label="回到首页">
@@ -522,16 +542,20 @@
     </div>
   </nav>
 
+  <!-- 主内容区域：JavaScript 会把首页、文章详情页动态渲染到这里 -->
   <main id="app" class="container"></main>
 
+  <!-- 页脚区域：放网站说明文字 -->
   <footer>
     <div class="container">
       <strong>DCloudCode</strong> · 一个不需要后端的技术博客模板。文章保存在浏览器本地；导出 posts.json 后放到 data/ 文件夹即可公开发布。
     </div>
   </footer>
 
+  <!-- 隐藏的文件选择框：点击“导入 posts.json”时会触发它 -->
   <input id="fileInput" type="file" accept="application/json,.json" class="hidden" />
 
+  <!-- 写文章弹窗：用于本地写 Markdown、实时预览和导出文章 -->
   <dialog id="editorDialog">
     <form method="dialog" class="editor-card" id="editorForm">
       <div class="editor-head">
@@ -577,117 +601,27 @@
   </dialog>
 
   <script>
-    const STORAGE_KEY = "stackink_posts_v1";
-    const THEME_KEY = "stackink_theme_v1";
+    // 脚本区：负责读取文章数据、渲染页面、搜索筛选、编辑文章和下载资源
+    // 浏览器本地文章缓存 key：保存你在网页里临时写的文章
+    const STORAGE_KEY = "dcloudcode_posts_v1";
+    // 浏览器本地主题缓存 key：保存明暗主题设置
+    const THEME_KEY = "dcloudcode_theme_v1";
+    // 文章目录文件路径：网站会从这里读取文章列表
     const POSTS_JSON_PATH = "data/posts.json"; // 你可以改成 "content/posts.json"、"articles/posts.json" 等路径
+    // 下载资源目录文件路径：网站会从这里读取下载列表
+    const DOWNLOADS_JSON_PATH = "data/downloads.json"; // 可选：下载资源列表，例如 PDF、ZIP、代码包、课件
 
-    const seedPosts = [
-      {
-        id: "cnn-from-zero",
-        title: "从零理解卷积神经网络：卷积、池化与 ReLU",
-        summary: "用手写数字识别项目为例，解释 CNN 为什么适合图像任务，以及每一层到底在做什么。",
-        tags: ["深度学习", "CNN", "Python"],
-        date: "2026-04-27",
-        content: `# 从零理解卷积神经网络：卷积、池化与 ReLU
+    // 内置文章区：这里已经清空，不再让 index.html 自带示例文章。
+    // 正式文章请写在 articles/*.md 中，再到 data/posts.json 里登记。
+    const seedPosts = [];
 
-卷积神经网络，也就是 CNN，最适合处理图像这类有空间结构的数据。普通全连接网络会把图片拉平成一维向量，而 CNN 会保留图片的二维结构。
-
-## 1. 卷积层做什么
-
-卷积层使用一个小窗口，也叫卷积核，在图片上滑动。每次滑动时，它会和局部像素做乘加运算，提取边缘、纹理、角点等局部特征。
-
-\`\`\`python
-class ConvBlock(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.conv = nn.Conv2d(1, 16, kernel_size=3, padding=1)
-        self.relu = nn.ReLU()
-        self.pool = nn.MaxPool2d(2)
-
-    def forward(self, x):
-        x = self.conv(x)
-        x = self.relu(x)
-        x = self.pool(x)
-        return x
-\`\`\`
-
-## 2. ReLU 层做什么
-
-ReLU 会把小于 0 的值变成 0，大于 0 的值保持不变。它的作用是加入非线性，否则多层线性变换叠在一起，本质上仍然只是一次线性变换。
-
-## 3. 池化层做什么
-
-池化层会压缩特征图尺寸，例如 28×28 变成 14×14。它可以减少计算量，并让模型对小范围平移更鲁棒。
-
-> 一句话总结：卷积负责提特征，ReLU 负责增加表达能力，池化负责压缩和增强鲁棒性。`
-      },
-      {
-        id: "ros2-yaml-params",
-        title: "ROS2 参数通信与 YAML 配置文件入门",
-        summary: "解释 ROS2 参数为什么可以通过服务完成读取和修改，以及 YAML 文件在启动节点时怎么使用。",
-        tags: ["ROS2", "机器人", "YAML"],
-        date: "2026-04-25",
-        content: `# ROS2 参数通信与 YAML 配置文件入门
-
-ROS2 的参数本质上是节点内部的一组键值对，比如相机帧率、阈值、话题名等。参数可以在程序运行前写入，也可以在程序运行时修改。
-
-## 为什么参数通信依赖服务通信
-
-服务通信是一问一答的模式。参数读取、设置、列出都符合这种模式：客户端发起请求，节点返回结果。
-
-常见参数服务包括：
-
-- \`/node_name/get_parameters\`
-- \`/node_name/set_parameters\`
-- \`/node_name/list_parameters\`
-
-## YAML 示例
-
-\`\`\`yaml
-rgbd_ball_detector_node:
-  ros__parameters:
-    orange_lower: [5, 100, 100]
-    orange_upper: [25, 255, 255]
-    min_area: 80
-\`\`\`
-
-启动时加载：
-
-\`\`\`bash
-ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params.yaml
-\`\`\`
-
-这样可以避免把所有参数都写死在代码里。`
-      },
-      {
-        id: "static-blog-cost",
-        title: "为什么个人技术博客优先选择静态网站",
-        summary: "静态网站没有服务器、数据库和后端接口，维护成本低，适合学生和个人开发者。",
-        tags: ["Web", "部署", "低成本"],
-        date: "2026-04-24",
-        content: `# 为什么个人技术博客优先选择静态网站
-
-如果你的目标是写技术文章，而不是做复杂社区，那么静态网站通常是最低成本方案。
-
-## 静态网站的优点
-
-1. 不需要服务器
-2. 不需要数据库
-3. 页面可以被 CDN 缓存
-4. GitHub Pages、Cloudflare Pages 等平台可以免费托管
-
-## 缺点
-
-静态网站没有真正的在线后台。你在网页编辑器里写的文章默认只保存在当前浏览器。想让所有人看到，需要导出 \`posts.json\` 并上传到代码仓库。
-
-## 推荐流程
-
-本地写文章 → 导出 posts.json → 提交到 GitHub → 自动部署。`
-      }
-    ];
-
+    // 文章数据数组：data/posts.json 读取后会放到这里
     let posts = [];
+    // 下载资源数组：data/downloads.json 读取后会放到这里
+    let downloads = [];
+    // 当前选中的标签，默认显示全部文章
     let activeTag = "全部";
+    // 当前搜索关键词
     let searchTerm = "";
 
     const app = document.querySelector("#app");
@@ -700,16 +634,20 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
     const previewBox = document.querySelector("#previewBox");
     const fileInput = document.querySelector("#fileInput");
 
+    // 页面启动入口：网页加载后先执行初始化
     init();
 
+    // 初始化函数：加载主题、文章、下载资源，绑定按钮事件，然后渲染页面
     async function init() {
       document.documentElement.dataset.theme = localStorage.getItem(THEME_KEY) || "light";
       posts = await loadInitialPosts();
+      downloads = await loadInitialDownloads();
       bindEvents();
       render();
       window.addEventListener("hashchange", render);
     }
 
+    // 加载文章：优先读取浏览器本地缓存，没有缓存再读取 data/posts.json
     async function loadInitialPosts() {
       const local = localStorage.getItem(STORAGE_KEY);
       if (local) return safeParsePosts(local, seedPosts);
@@ -726,6 +664,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       return seedPosts;
     }
 
+    // 绑定事件：给按钮、文件导入、编辑器输入框添加交互功能
     function bindEvents() {
       document.querySelector("#themeBtn").addEventListener("click", () => {
         const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
@@ -751,6 +690,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       titleInput.addEventListener("input", updatePreview);
     }
 
+    // 路由渲染：根据地址栏 hash 决定显示首页还是文章详情
     function render() {
       const currentId = location.hash.startsWith("#post-") ? location.hash.replace("#post-", "") : "";
       if (currentId) {
@@ -760,8 +700,13 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       renderHome();
     }
 
+    // 渲染首页：生成首页介绍、搜索框、标签、文章卡片和下载卡片
     function renderHome() {
       const tags = ["全部", ...new Set(posts.flatMap(post => post.tags || []))];
+      const filteredDownloads = downloads.filter(item => {
+        const haystack = [item.title, item.description, item.category, item.file].join(" ").toLowerCase();
+        return haystack.includes(searchTerm.toLowerCase().trim());
+      });
       const filtered = posts
         .filter(post => activeTag === "全部" || post.tags.includes(activeTag))
         .filter(post => {
@@ -774,8 +719,8 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
         <section class="hero">
           <div class="hero-card">
             <p class="eyebrow">Static · Markdown · Low Cost</p>
-            <h1>技术博客/技术文档站</h1>
-            <p>这是一个单文件静态技术博客：支持 Markdown 写作、代码块、标签筛选、搜索、导入导出。最适合个人学习记录、项目文档、机器人/深度学习笔记。</p>
+            <h1>DCloudCode 技术博客</h1>
+            <p>这里是 DCloudCode 技术博客，用来记录 ROS2、机器人、深度学习、嵌入式开发和项目技术文档。</p>
           </div>
           <aside class="side-card">
             <div>
@@ -806,6 +751,18 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
         <section class="posts">
           ${filtered.length ? filtered.map(renderPostCard).join("") : `<div class="empty">没有找到文章。换个关键词试试，或者点击右上角写一篇。</div>`}
         </section>
+
+        <section style="padding-bottom:64px;">
+          <div style="display:flex; justify-content:space-between; align-items:end; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+            <div>
+              <p class="eyebrow">Downloads</p>
+              <h2 style="margin:0; letter-spacing:-0.03em;">资料下载</h2>
+            </div>
+          </div>
+          <div class="posts">
+            ${filteredDownloads.length ? filteredDownloads.map(renderDownloadCard).join("") : `<div class="empty">暂无下载资源。你可以创建 data/downloads.json，并把 PDF、ZIP、代码包放进 downloads/ 文件夹。</div>`}
+          </div>
+        </section>
       `;
 
       document.querySelector("#searchInput").addEventListener("input", event => {
@@ -821,6 +778,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       });
     }
 
+    // 渲染文章卡片：把一篇文章变成首页里的卡片 HTML
     function renderPostCard(post) {
       return `
         <a class="post-card" href="#post-${escapeAttr(post.id)}">
@@ -836,6 +794,24 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       `;
     }
 
+    // 渲染下载卡片：把一个下载资源变成首页里的下载卡片 HTML
+    function renderDownloadCard(item) {
+      return `
+        <article class="post-card">
+          <div>
+            <div class="meta"><span>${escapeHtml(item.category || "资源")}</span><span>·</span><span>${escapeHtml(item.size || "未知大小")}</span></div>
+            <h2>${escapeHtml(item.title)}</h2>
+            <p>${escapeHtml(item.description || "")}</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;">
+            <a class="button primary" href="${escapeAttr(item.file)}" download>下载</a>
+            <a class="button" href="${escapeAttr(item.file)}" target="_blank" rel="noreferrer">预览/打开</a>
+          </div>
+        </article>
+      `;
+    }
+
+    // 渲染文章详情页：点击文章后显示完整 Markdown 正文
     function renderArticle(post) {
       app.innerHTML = `
         <article class="article">
@@ -856,22 +832,25 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       `;
     }
 
+    // 打开编辑器：id 为空表示新建文章，有 id 表示编辑已有文章
     function openEditor(id = "") {
       const post = posts.find(item => item.id === id);
       postId.value = post ? post.id : "";
       titleInput.value = post ? post.title : "";
       summaryInput.value = post ? post.summary : "";
       tagsInput.value = post ? post.tags.join(", ") : "";
-      contentInput.value = post ? post.content : `# 新文章标题\n\n## 问题背景\n\n这里写你遇到的问题。\n\n## 核心原理\n\n这里解释原理。\n\n## 代码实现\n\n\`\`\`python\nprint("Hello, StackInk")\n\`\`\`\n\n## 总结\n\n用几句话总结。`;
+      contentInput.value = post ? post.content : `# 新文章标题\n\n## 问题背景\n\n这里写你遇到的问题。\n\n## 核心原理\n\n这里解释原理。\n\n## 代码实现\n\n\`\`\`python\nprint("Hello, DCloudCode")\n\`\`\`\n\n## 总结\n\n用几句话总结。`;
       updatePreview();
       editorDialog.showModal();
     }
 
+    // 更新实时预览：把左侧 Markdown 转换成右侧预览 HTML
     function updatePreview() {
       const title = titleInput.value.trim() || "文章预览";
       previewBox.innerHTML = `<h1>${escapeHtml(title)}</h1>${renderMarkdown(contentInput.value)}`;
     }
 
+    // 保存文章：把编辑器里的内容保存到浏览器本地缓存
     function savePostFromEditor() {
       const now = new Date();
       const id = postId.value || slugify(titleInput.value) || `post-${Date.now()}`;
@@ -895,6 +874,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       alert("已保存到当前浏览器。要让其他人也看到，请点击“导出 posts.json”，然后上传到仓库的 data/ 文件夹。" );
     }
 
+    // 删除文章：删除当前正在编辑的本地文章
     function deleteCurrentPost() {
       if (!postId.value) {
         editorDialog.close();
@@ -908,16 +888,19 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       render();
     }
 
+    // 下载 Markdown：把当前编辑器正文保存成 .md 文件
     function downloadCurrentMarkdown() {
       const filename = `${slugify(titleInput.value) || "article"}.md`;
       downloadFile(filename, contentInput.value, "text/markdown;charset=utf-8");
     }
 
+    // 导出 posts.json：把当前本地文章列表导出成 JSON 文件
     function exportPostsJson() {
       const json = JSON.stringify(posts, null, 2);
       downloadFile("posts.json", json, "application/json;charset=utf-8");
     }
 
+    // 导入 posts.json：从本地选择 JSON 文件并导入到浏览器缓存
     async function importPostsJson(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -935,21 +918,25 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       }
     }
 
+    // 清空本地编辑：删除浏览器缓存，让网站重新读取线上 data/posts.json
     function clearLocalData() {
       if (!confirm("这会清空当前浏览器保存的文章，并恢复线上 data/posts.json 或示例文章。继续吗？")) return;
       localStorage.removeItem(STORAGE_KEY);
       location.reload();
     }
 
+    // 持久化文章：把文章数组写入 localStorage
     function persistPosts() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
     }
 
+    // 复制文章链接：复制当前文章的访问地址
     function copyArticleLink(id) {
       const url = `${location.origin}${location.pathname}#post-${id}`;
       navigator.clipboard.writeText(url).then(() => alert("链接已复制"));
     }
 
+    // 通用下载函数：用于下载 posts.json 或 Markdown 文件
     function downloadFile(filename, content, type) {
       const blob = new Blob([content], { type });
       const url = URL.createObjectURL(blob);
@@ -962,6 +949,27 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       URL.revokeObjectURL(url);
     }
 
+    // 加载下载资源：读取 data/downloads.json，没有就显示空资源提示
+    async function loadInitialDownloads() {
+      try {
+        const response = await fetch(DOWNLOADS_JSON_PATH, { cache: "no-store" });
+        if (!response.ok) return [];
+        const data = await response.json();
+        if (!Array.isArray(data)) return [];
+        return data.map((item, index) => ({
+          id: String(item.id || `download-${index}`),
+          title: String(item.title || "未命名资源"),
+          description: String(item.description || ""),
+          category: String(item.category || "资源"),
+          size: String(item.size || ""),
+          file: String(item.file || "")
+        })).filter(item => item.file);
+      } catch (error) {
+        return [];
+      }
+    }
+
+    // 安全解析 JSON：解析失败就返回备用数据，避免页面崩溃
     function safeParsePosts(text, fallback) {
       try {
         const data = JSON.parse(text);
@@ -972,6 +980,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       }
     }
 
+    // 规范化文章数据：补齐 id、title、tags、date、file、content 等字段
     function normalizePosts(data) {
       return data.map((post, index) => ({
         id: String(post.id || slugify(post.title || `post-${index}`) || `post-${index}`),
@@ -984,6 +993,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       }));
     }
 
+    // 读取 Markdown 文件：根据 file 字段加载 articles/*.md 正文
     async function hydrateMarkdownFiles(postList) {
       return await Promise.all(postList.map(async post => {
         if (!post.file) return post;
@@ -997,6 +1007,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       }));
     }
 
+    // Markdown 渲染器：把 Markdown 文本转换成网页可以显示的 HTML
     function renderMarkdown(markdown) {
       const codeBlocks = [];
       let text = markdown.replace(/```([\s\S]*?)```/g, (_, code) => {
@@ -1044,14 +1055,17 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
       return html.join("\n").replace(/@@CODE_BLOCK_(\d+)@@/g, (_, index) => codeBlocks[Number(index)]);
     }
 
+    // 阅读时间估算：根据文章长度估算大概阅读分钟数
     function estimateReadTime(content) {
       return Math.max(1, Math.ceil((content || "").length / 550));
     }
 
+    // 日期格式化：把 2026-04-28 转成中文日期显示
     function formatDate(date) {
       return new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "long", day: "numeric" }).format(new Date(date));
     }
 
+    // 标题转 id：把文章标题转换成适合 URL 使用的字符串
     function slugify(text) {
       return String(text || "")
         .trim()
@@ -1062,6 +1076,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
         .slice(0, 80);
     }
 
+    // HTML 转义：防止文章内容中的特殊字符破坏页面结构
     function escapeHtml(value) {
       return String(value || "")
         .replace(/&/g, "&amp;")
@@ -1071,6 +1086,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
         .replace(/'/g, "&#039;");
     }
 
+    // 属性转义：用于 href、data-tag 等 HTML 属性值
     function escapeAttr(value) {
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
