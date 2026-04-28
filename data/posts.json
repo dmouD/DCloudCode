@@ -22,5 +22,13 @@
     "tags": ["神经网络", "深度学习"],
     "date": "2026-04-28",
     "file": "articles/CNN.md"
+  },
+  {
+    "id": "bhuman",
+    "title": "基于codex分析的bhuman",
+    "summary": "bhuman项目架构",
+    "tags": ["机器人"],
+    "date": "2026-04-28",
+    "file": "articles/codex.md"
   }
 ]
