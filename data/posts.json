@@ -1,7 +1,7 @@
 [
   {
     "id": "perception_node_test01",
-    "title": "perception_node第一版逻辑",
+    "title": "perception_node第一版逻辑及原理",
     "summary": "解释第一版节点工作原理",
     "tags": ["ROS2", "机器人", "节点"],
     "date": "2026-04-28",
@@ -9,7 +9,7 @@
   },
    {
     "id": "MLP",
-    "title": "识别节点第一版本",
+    "title": "MLP多层感知机",
     "summary": "解释第一版节点工作原理",
     "tags": ["神经网络", "深度学习"],
     "date": "2026-04-28",
