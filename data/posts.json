@@ -10,9 +10,17 @@
    {
     "id": "MLP",
     "title": "MLP多层感知机",
-    "summary": "解释第一版节点工作原理",
+    "summary": "神经网络的基础",
     "tags": ["神经网络", "深度学习"],
     "date": "2026-04-28",
     "file": "articles/MLP.md"
+  },
+ {
+    "id": "CNN",
+    "title": "基于CNN的手写数字识别",
+    "summary": "CNN项目实战",
+    "tags": ["神经网络", "深度学习"],
+    "date": "2026-04-28",
+    "file": "articles/CNN.md"
   }
 ]
