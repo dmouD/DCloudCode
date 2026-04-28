@@ -718,7 +718,7 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
         const response = await fetch(POSTS_JSON_PATH, { cache: "no-store" });
         if (response.ok) {
           const remotePosts = await response.json();
-          if (Array.isArray(remotePosts)) return normalizePosts(remotePosts);
+          if (Array.isArray(remotePosts)) return await hydrateMarkdownFiles(normalizePosts(remotePosts));
         }
       } catch (error) {
         // 本地直接打开 index.html 时，fetch posts.json 可能失败，使用内置示例文章即可。
@@ -979,7 +979,21 @@ ros2 run your_pkg rgbd_ball_detector_node --ros-args --params-file config/params
         summary: String(post.summary || ""),
         tags: Array.isArray(post.tags) ? post.tags.map(String) : [],
         date: String(post.date || new Date().toISOString().slice(0, 10)),
+        file: String(post.file || ""), // 可选：把正文放到单独的 .md 文件里，例如 "articles/ros2.md"
         content: String(post.content || "")
+      }));
+    }
+
+    async function hydrateMarkdownFiles(postList) {
+      return await Promise.all(postList.map(async post => {
+        if (!post.file) return post;
+        try {
+          const response = await fetch(post.file, { cache: "no-store" });
+          if (!response.ok) return post;
+          return { ...post, content: await response.text() };
+        } catch (error) {
+          return post;
+        }
       }));
     }
 
