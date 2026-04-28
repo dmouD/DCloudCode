@@ -623,6 +623,8 @@
     let activeTag = "全部";
     // 当前搜索关键词
     let searchTerm = "";
+    // 搜索防抖定时器：避免每输入一个字就立刻重绘整个页面，导致输入框失去焦点
+    let searchTimer = null;
 
     const app = document.querySelector("#app");
     const editorDialog = document.querySelector("#editorDialog");
@@ -765,9 +767,20 @@
         </section>
       `;
 
-      document.querySelector("#searchInput").addEventListener("input", event => {
+      const searchInput = document.querySelector("#searchInput");
+      searchInput.addEventListener("input", event => {
         searchTerm = event.target.value;
-        renderHome();
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(() => {
+          renderHome();
+          const nextInput = document.querySelector("#searchInput");
+          if (nextInput) {
+            nextInput.focus();
+            const cursorPosition = nextInput.value.length;
+            nextInput.setSelectionRange(cursorPosition, cursorPosition);
+          }
+        }, 250);
       });
 
       document.querySelectorAll(".tag").forEach(tag => {
