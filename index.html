@@ -533,12 +533,17 @@
         <span class="logo-mark">D</span>
         <span>DCloudCode 技术博客</span>
       </a>
-      <div class="nav-actions">
-        <button id="themeBtn" title="切换明暗主题">🌗 主题</button>
-        <button id="importBtn">导入 posts.json</button>
-        <button id="exportBtn">导出 posts.json</button>
-        <button id="newPostBtn" class="primary">✍️ 写文章</button>
-      </div>
+     <div class="nav-actions">
+  <a class="button" href="#home">首页</a>
+  <a class="button" href="#about">关于</a>
+  <a class="button" href="#projects">项目</a>
+  <a class="button" href="#downloads">资料下载</a>
+
+  <button id="themeBtn" title="切换明暗主题">🌗 主题</button>
+  <button id="importBtn">导入 posts.json</button>
+  <button id="exportBtn">导出 posts.json</button>
+  <button id="newPostBtn" class="primary">✍️ 写文章</button>
+</div>
     </div>
   </nav>
 
@@ -693,14 +698,21 @@
     }
 
     // 路由渲染：根据地址栏 hash 决定显示首页还是文章详情
-    function render() {
-      const currentId = location.hash.startsWith("#post-") ? location.hash.replace("#post-", "") : "";
-      if (currentId) {
-        const post = posts.find(item => item.id === currentId);
-        if (post) return renderArticle(post);
-      }
-      renderHome();
-    }
+function render() {
+  const hash = location.hash || "#home";
+
+  if (hash.startsWith("#post-")) {
+    const currentId = hash.replace("#post-", "");
+    const post = posts.find(item => item.id === currentId);
+    if (post) return renderArticle(post);
+  }
+
+  if (hash === "#about") return renderAboutPage();
+  if (hash === "#projects") return renderProjectsPage();
+  if (hash === "#downloads") return renderDownloadsPage();
+
+  renderHome();
+}
 
     // 渲染首页：生成首页介绍、搜索框、标签、文章卡片和下载卡片
     function renderHome() {
@@ -845,6 +857,91 @@
       `;
     }
 
+    // 渲染“关于”页面
+function renderAboutPage() {
+  app.innerHTML = `
+    <article class="article">
+      <button onclick="location.hash='home'">← 返回首页</button>
+      <div style="height:22px"></div>
+
+      <p class="eyebrow">About</p>
+      <h1>关于 DCloudCode</h1>
+
+      <div class="article-body">
+        <p>DCloudCode 技术博客用于记录我的技术学习、项目开发和机器人相关实践。</p>
+
+        <h2>主要记录方向</h2>
+        <ul>
+          <li>ROS2 学习笔记</li>
+          <li>B-Human / NAO 机器人项目</li>
+          <li>深度学习与神经网络</li>
+          <li>STM32 / ESP 嵌入式开发</li>
+          <li>数据结构、线性代数和项目技术文档</li>
+        </ul>
+
+        <h2>网站结构</h2>
+        <p>文章正文放在 <code>articles/*.md</code>，文章目录放在 <code>data/posts.json</code>，下载资源放在 <code>data/downloads.json</code>。</p>
+      </div>
+    </article>
+  `;
+}
+
+// 渲染“项目”页面
+function renderProjectsPage() {
+  app.innerHTML = `
+    <article class="article">
+      <button onclick="location.hash='home'">← 返回首页</button>
+      <div style="height:22px"></div>
+
+      <p class="eyebrow">Projects</p>
+      <h1>项目记录</h1>
+
+      <div class="article-body">
+        <h2>B-Human / NAO 竞走项目</h2>
+        <p>用于记录 B-Human 架构分析、竞走模块调用、步态控制逻辑修改和比赛调试过程。</p>
+
+        <h2>DCloudCode 技术博客</h2>
+        <p>一个基于 GitHub Pages 的静态技术博客，支持 Markdown 文章、搜索、标签、资料下载和多页面跳转。</p>
+
+        <h2>后续可扩展</h2>
+        <ul>
+          <li>项目时间线</li>
+          <li>项目截图展示</li>
+          <li>项目源码链接</li>
+          <li>项目文档下载</li>
+        </ul>
+      </div>
+    </article>
+  `;
+}
+
+// 渲染“资料下载”独立页面
+function renderDownloadsPage() {
+  const filteredDownloads = downloads.filter(item => {
+    const haystack = [item.title, item.description, item.category, item.file].join(" ").toLowerCase();
+    return haystack.includes(searchTerm.toLowerCase().trim());
+  });
+
+  app.innerHTML = `
+    <article class="article">
+      <button onclick="location.hash='home'">← 返回首页</button>
+      <div style="height:22px"></div>
+
+      <p class="eyebrow">Downloads</p>
+      <h1>资料下载</h1>
+      <p style="color:var(--muted); font-size:1.08rem;">这里集中放 PDF、Markdown、ZIP、代码包、课件等资源。</p>
+    </article>
+
+    <section class="posts">
+      ${
+        filteredDownloads.length
+          ? filteredDownloads.map(renderDownloadCard).join("")
+          : `<div class="empty">暂无下载资源。请在 data/downloads.json 中登记资源。</div>`
+      }
+    </section>
+  `;
+}
+    
     // 打开编辑器：id 为空表示新建文章，有 id 表示编辑已有文章
     function openEditor(id = "") {
       const post = posts.find(item => item.id === id);
